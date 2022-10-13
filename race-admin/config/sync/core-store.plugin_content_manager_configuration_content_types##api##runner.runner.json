@@ -1,0 +1,263 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::api::runner.runner",
+  "value": {
+    "uid": "api::runner.runner",
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 100,
+      "mainField": "fullname",
+      "defaultSortBy": "fullname",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "firstname": {
+        "edit": {
+          "label": "firstname",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "firstname",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "lastname": {
+        "edit": {
+          "label": "lastname",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "lastname",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "blocked": {
+        "edit": {
+          "label": "blocked",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "blocked",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "children": {
+        "edit": {
+          "label": "children",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "fullname"
+        },
+        "list": {
+          "label": "children",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "parent": {
+        "edit": {
+          "label": "parent",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "fullname"
+        },
+        "list": {
+          "label": "parent",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "runs": {
+        "edit": {
+          "label": "runs",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "id"
+        },
+        "list": {
+          "label": "runs",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "email": {
+        "edit": {
+          "label": "email",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "email",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "minor": {
+        "edit": {
+          "label": "minor",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "minor",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "child": {
+        "edit": {
+          "label": "child",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "child",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "fullname": {
+        "edit": {
+          "label": "fullname",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "fullname",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "attachments": {
+        "edit": {
+          "label": "attachments",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "attachments",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "fullname",
+        "email",
+        "runs",
+        "parent",
+        "children"
+      ],
+      "edit": [
+        [
+          {
+            "name": "firstname",
+            "size": 4
+          },
+          {
+            "name": "lastname",
+            "size": 4
+          },
+          {
+            "name": "email",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "minor",
+            "size": 4
+          },
+          {
+            "name": "child",
+            "size": 4
+          },
+          {
+            "name": "blocked",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "attachments",
+            "size": 6
+          }
+        ]
+      ],
+      "editRelations": [
+        "runs",
+        "parent",
+        "children"
+      ]
+    }
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}
