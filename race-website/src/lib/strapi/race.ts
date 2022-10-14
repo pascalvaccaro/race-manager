@@ -1,7 +1,6 @@
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
 import { fetchFactory } from './shared';
-import { findNextPublicRace } from './register';
 
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
@@ -14,16 +13,25 @@ export const getRace = async (id: string) => {
 	});
 	return authFetch<App.Race>(endpoint);
 };
+export const findNextPublicRace = async () => {
+	const endpoint = new URL('/api/races', STRAPI_URL);
+	endpoint.search = stringify({
+		filters: { startDate: { $gte: new Date().toISOString().split('T')[0] } },
+		sort: 'startDate:asc',
+		populate: ['park']
+	});
 
-export const createRun =
-	(race: string | number) => async (run: Pick<App.Run, 'numberSign' | 'chrono'>) => {
-		const endpoint = new URL('/api/runs', STRAPI_URL);
-		const options = {
-			method: 'POST',
-			body: JSON.stringify({ data: { ...run, race } })
-		};
-		return authFetch<App.Run>(endpoint, options);
+	return authFetch<App.Race[]>(endpoint).then(([first]) => first ?? null);
+};
+
+export const createRun = (race: string | number) => async (run: Partial<App.Run>) => {
+	const endpoint = new URL('/api/runs', STRAPI_URL);
+	const options = {
+		method: 'POST',
+		body: JSON.stringify({ data: { ...run, race } })
 	};
+	return authFetch<App.Run>(endpoint, options);
+};
 
 export const updateRun = (race: string | number) => async (run: App.Run) => {
 	const endpoint = new URL('/api/runs/' + run.id, STRAPI_URL);

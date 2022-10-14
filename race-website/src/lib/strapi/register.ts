@@ -42,17 +42,6 @@ export const findRunners = async (query: Record<string, string | undefined>) => 
 	return authFetch<App.Runner[]>(endpoint);
 };
 
-export const findNextPublicRace = async () => {
-	const endpoint = new URL('/api/races', STRAPI_URL);
-	endpoint.search = stringify({
-		filters: { startDate: { $gte: new Date().toISOString().split('T')[0] } },
-		sort: 'startDate:asc',
-		populate: ['park']
-	});
-
-	return authFetch<App.Race[]>(endpoint).then(([first]) => first ?? null);
-};
-
 export const registerRun = async (run: App.Run) => {
 	const endpoint = new URL('/api/runs', STRAPI_URL);
 	endpoint.search = stringify({

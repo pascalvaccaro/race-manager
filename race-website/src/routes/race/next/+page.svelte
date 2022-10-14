@@ -6,11 +6,12 @@
 	import Form from '$lib/components/RegisterForm.svelte';
 	
 	export let data: PageData;
-	const startTime = getRaceStartDateTime(data.race);
+	$: race = data.race as App.Race;
+	$: startTime = getRaceStartDateTime(race);
 </script>
 
 <Disclaimer>
-	<h2 style="margin: 0;">La course du {startTime} au parc {data.race.park.name}</h2>
+	<h2 style="margin: 0;">La prochaine course a lieu le {startTime} au parc {race.park.name}</h2>
 </Disclaimer>
 
-
+<Form {race} />
