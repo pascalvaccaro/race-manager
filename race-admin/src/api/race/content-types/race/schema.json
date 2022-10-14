@@ -33,6 +33,14 @@
       "type": "time",
       "default": "10:00",
       "required": true
+    },
+    "gallery": {
+      "allowedTypes": [
+        "images",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": true
     }
   }
 }

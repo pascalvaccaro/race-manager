@@ -37,6 +37,7 @@ declare namespace App {
 			gallery: unknown[];
 		};
 		runs: App.Run[];
+		gallery: App.File[];
 	}
 
 	interface File {
@@ -46,6 +47,8 @@ declare namespace App {
 		valid: boolean | null;
 		expiry: Date | null;
 		createdAt: Date;
+		alternativeText: string | null;
+		url: string;
 	}
 
 	interface AdminRole {
