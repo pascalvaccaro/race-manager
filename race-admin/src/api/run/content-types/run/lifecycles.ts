@@ -28,7 +28,7 @@ export default {
         from: "A Ton Allure <atonallure@gmail.com>",
         subject: `Ton inscription à la course du ${startDate.format(
           "D MMMM YYYY"
-        )}`,
+        )} au parc ${result.race.park.name}`,
         html: `<p>Bonjour ${result.runner.firstname},</p>
           <p>Merci pour ton inscription à la course A Ton Allure !<p>
           <p>Le QR Code fait son grand retour ! Merci de venir le jour de la course muni de celui attaché à ce message.</p>

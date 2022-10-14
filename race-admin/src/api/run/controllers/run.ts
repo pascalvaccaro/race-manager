@@ -18,25 +18,10 @@ export default factories.createCoreController("api::run.run", ({ strapi }) => ({
         ...(numberSign ? { numberSign } : {}),
         race,
       },
-      populate: {
-        runner: true,
-        race: { populate: { park: true } },
-      },
+      populate: ['runner', 'race'],
     });
-    if (!entry) {
-      entry = await strapi.entityService.create("api::run.run", {
-        data: ctx.request.body.data,
-        ...ctx.query,
-      });
-    } else {
-      entry = await strapi.entityService.update("api::run.run", entry.id, {
-        data: ctx.request.body.data,
-        ...ctx.query,
-      });
-    }
 
-    const sanitizedEntity = await this.sanitizeOutput(entry, ctx);
-    return this.transformResponse(sanitizedEntity);
+    return await (entry ? super.update(ctx) : super.create(ctx));
   },
 
   async createFromGScript(ctx) {
