@@ -12,6 +12,7 @@
 		runner?.runs
 			?.sort((a, b) => dayjs(a.race.startDate).diff(b.race.startDate))
 			.map(({ chrono, race }) => {
+				// @FIX the timezone is incorrect here
 				const start = dayjs(race.startDate + 'T' + race.startTime + 'Z');
 				const input = chrono.split(':');
 				let millis,
