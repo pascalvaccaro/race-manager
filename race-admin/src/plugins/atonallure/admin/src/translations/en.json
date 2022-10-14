@@ -1,5 +1,7 @@
 {
+  "menu.label": "Race Manager",
   "file.actions.valid": "Valid",
+  "file.actions.validate": "Approve some documents",
   "file.actions.invalid": "Reject",
   "file.actions.empty": "No documents to validate"
 }

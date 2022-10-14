@@ -4,15 +4,34 @@
  *
  */
 
-import React from 'react';
-import pluginId from '../../pluginId';
+import React from "react";
+import { Stack } from "@strapi/design-system/Stack";
+import { Flex } from "@strapi/design-system/Flex";
+import { Link } from "@strapi/design-system/Link";
+import { EmptyStateLayout } from "@strapi/helper-plugin";
 
-const HomePage: React.VoidFunctionComponent = () => {
+import getTrad from "../../utils/getTrad";
+
+const HomePage: React.FC = () => {
   return (
-    <div>
-      <h1>{pluginId}&apos;s HomePage</h1>
-      <p>Happy coding</p>
-    </div>
+    <Stack>
+      <Link to="/plugins/atonallure/validator">
+        <Flex
+          padding={4}
+          justifyContent="center"
+          style={{ width: "100%", height: "100%" }}
+        >
+          <EmptyStateLayout
+            content={{
+              id: getTrad("file.actions.validate"),
+              defaultMessage: "Valider des documents",
+            }}
+            icon="media"
+            hasRadius
+          />
+        </Flex>
+      </Link>
+    </Stack>
   );
 };
 

@@ -12,7 +12,7 @@ const name = pluginPkg.strapi.name;
 export default {
   register(app) {
     app.addMenuLink({
-      to: '/plugins/atonallure/validator',
+      to: '/plugins/atonallure',
       icon: PluginIcon,
       intlLabel: {
         id: 'atonallure.menu.label',

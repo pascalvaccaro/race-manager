@@ -15,6 +15,7 @@ import ValidatorPage from '../ValidatorPage';
 const App: React.FC = () => {
   return (
     <div>
+
       <Switch>
         <Route path={`/plugins/${pluginId}`} component={HomePage} exact />
         <Route path={`/plugins/${pluginId}/validator`} component={ValidatorPage} exact />

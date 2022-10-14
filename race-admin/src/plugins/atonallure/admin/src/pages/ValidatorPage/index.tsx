@@ -14,7 +14,6 @@ import {
   CarouselSlide,
   CarouselImage,
 } from "@strapi/design-system/CarouselInput";
-import { Flex } from "@strapi/design-system/Flex";
 import { Icon } from "@strapi/design-system/Icon";
 import { IconButton } from "@strapi/design-system/IconButton";
 import { EmptyStateLayout } from "@strapi/helper-plugin";
@@ -25,6 +24,7 @@ import ValidIcon from "@strapi/icons/Check";
 import downloadFile from "../../utils/downloadFile";
 import getTrad from "../../utils/getTrad";
 import axios from "../../utils/axiosInstance";
+import Wrapper from "./Wrapper";
 
 const findAssets = async () => {
   const search = stringify({
@@ -53,6 +53,10 @@ const ValidatorPage: React.FC = () => {
   const { data: assetsToValidate } = useQuery("validate", findAssets, {
     placeholderData: [],
   });
+  const title = React.useMemo(
+    () => formatMessage({ id: getTrad("file.actions.validate") }),
+    [formatMessage]
+  );
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const handleNext = React.useCallback(() => {
     if (!assetsToValidate || !assetsToValidate.length) return;
@@ -81,11 +85,7 @@ const ValidatorPage: React.FC = () => {
 
   if (!asset || !assetsToValidate?.length)
     return (
-      <Flex
-        padding={4}
-        justifyContent="center"
-        style={{ width: "100%", height: "100%" }}
-      >
+      <Wrapper title={title}>
         <EmptyStateLayout
           content={{
             id: getTrad("file.actions.empty"),
@@ -94,15 +94,11 @@ const ValidatorPage: React.FC = () => {
           icon="media"
           hasRadius
         />
-      </Flex>
+      </Wrapper>
     );
 
   return (
-    <Flex
-      padding={4}
-      justifyContent="center"
-      style={{ width: "100%", height: "100%" }}
-    >
+    <Wrapper title={title}>
       <CarouselInput
         label={`Valider les documents (${selectedIndex + 1}/${
           assetsToValidate?.length
@@ -160,7 +156,7 @@ const ValidatorPage: React.FC = () => {
           </CarouselSlide>
         ))}
       </CarouselInput>
-    </Flex>
+    </Wrapper>
   );
 };
 
