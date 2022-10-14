@@ -43,14 +43,12 @@
 				body,
 				headers: { 'Content-Type': 'application/json' }
 			});
-			loading = false;
 			if (res.redirected) window.location.assign(res.url);
 		} catch (err) {
 			console.error(err);
-			return;
+			html5Qrcode.resume();
 		} finally {
 			loading = false;
-			html5Qrcode.resume();
 		}
 	}
 
