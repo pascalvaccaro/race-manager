@@ -1,4 +1,6 @@
-export const capitalise = (str = '') => str.trim().slice(0, 1).toUpperCase() + str.trim().slice(1);
+import { env } from "$env/dynamic/public";
+
+export const capitalize = (str = '') => str.trim().slice(0, 1).toUpperCase() + str.trim().slice(1);
 export const extractCookie = (cookie: string, key?: string) => {
   const cookieMap = cookie
 		?.split(';')
@@ -12,4 +14,9 @@ export const extractCookie = (cookie: string, key?: string) => {
 		);
 
   if (key) return cookieMap[key] as string;
-}
+};
+export const prefixPathWithBackendUrl = (url: string) => {
+	if (url.startsWith('http')) return url;
+	if (url.startsWith('/')) return new URL(url, env.STRAPI_URL).toString();
+	return new URL('/' + url, env.STRAPI_URL).toString();
+};

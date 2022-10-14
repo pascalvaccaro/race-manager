@@ -1,5 +1,5 @@
 import { derived, writable } from 'svelte/store';
-import { capitalise } from '$lib/utils/string';
+import { capitalize } from '$lib/utils/string';
 import { runners } from './runners';
 
 const defaultRun = {
@@ -35,7 +35,7 @@ export const setRunner = async (payload: Partial<App.Runner>) => {
 
 run.subscribe((updated) => {
 	const { runner } = updated;
-	const fullname = capitalise(runner.firstname) + ' ' + capitalise(runner.lastname);
+	const fullname = capitalize(runner.firstname) + ' ' + capitalize(runner.lastname);
 	if (runner.fullname === fullname) return;
 	if (runner.lastname && runner.firstname)
 		setRunner({ fullname }).catch(() => run.update(updateRunner({ fullname })));

@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
 import { fetchFactory } from './shared';
+import { getSimpleDate } from '$lib/utils/date';
 
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
@@ -16,13 +17,22 @@ export const getRace = async (id: string) => {
 export const findNextPublicRace = async () => {
 	const endpoint = new URL('/api/races', STRAPI_URL);
 	endpoint.search = stringify({
-		filters: { startDate: { $gte: new Date().toISOString().split('T')[0] } },
+		filters: { startDate: { $gte: getSimpleDate() } },
 		sort: 'startDate:asc',
 		populate: ['park']
 	});
 
 	return authFetch<App.Race[]>(endpoint).then(([first]) => first ?? null);
 };
+export const getPastRaces = async () => {
+	const endpoint = new URL('/api/races', STRAPI_URL);
+	endpoint.search = stringify({
+		filters: { startDate: { $lt: getSimpleDate() }},
+		populate: ['runs', 'runs.runner', 'park', 'gallery']
+	});
+	return authFetch<App.Race[]>(endpoint);
+};
+
 
 export const createRun = (race: string | number) => async (run: Partial<App.Run>) => {
 	const endpoint = new URL('/api/runs', STRAPI_URL);
