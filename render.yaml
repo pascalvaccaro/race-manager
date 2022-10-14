@@ -9,6 +9,8 @@ services:
     startCommand: node build/index.js
     autoDeploy: false
     envVars:
+      - key: NODE_VERSION
+        value: ~16.13.0
       - key: STRAPI_URL
         fromService:
           name: race-admin
