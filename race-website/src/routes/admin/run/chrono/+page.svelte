@@ -17,7 +17,7 @@
 	let chrono = defaultChrono;
 	let loading = false;
 
-	const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', ',', '0', '<'];
+	const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '+', '0', '<'];
 
 	function onReset() {
 		if (interval >= 0) clearInterval(interval);
@@ -83,7 +83,7 @@
 
 	function onSubmit() {
 		if (!$startTime) throw new Error('no start time set');
-		inputVal.split(',').filter(Boolean).map(Number).forEach(registerTime());
+		inputVal.split('+').filter(Boolean).map(Number).forEach(registerTime());
 		inputVal = '';
 		throttleTime = null;
 	}
@@ -92,7 +92,7 @@
 		if (!digits.includes(digit)) return;
 
 		if (inputVal.length === 0) {
-			if (digit === ',') return;
+			if (digit === '+') return;
 			throttleTime = dayjs();
 		}
 		if (digit === '<') inputVal = inputVal.slice(0, -1);
@@ -125,7 +125,7 @@
 		</ul>
 		<div class="chrono">
 			{#if inputVal}
-				{#each inputVal.split(',') as input}
+				{#each inputVal.split('+') as input}
 					<span class="badge">{input}</span>
 				{/each}
 			{/if}
