@@ -14,7 +14,8 @@
   "attributes": {
     "chrono": {
       "type": "string",
-      "regex": "^(?:\\d{2}:)*?[0-5]\\d:[0-2]\\d\\.\\d{3}$"
+      "regex": "^(?:\\d{2}:)*?[0-5]\\d:[0-2]\\d\\.\\d{3}$",
+      "default": "00:00.000"
     },
     "numberSign": {
       "type": "integer",
