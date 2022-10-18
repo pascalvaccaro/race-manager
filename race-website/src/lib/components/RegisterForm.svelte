@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { page } from '$app/stores';
 	import { run, setRunner, needs } from '$lib/store/run';
 	import SmartInput from './SmartInput.svelte';
 	import FileInput from './FileInput.svelte';
@@ -34,6 +33,7 @@
 		/>
 	{/if}
 
+	<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 	<SmartInput name="runnerId">
 		<TwoCols>
 			<input
@@ -51,7 +51,6 @@
 				bind:value={$run.runner.lastname}
 			/>
 		</TwoCols>
-		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 	</SmartInput>
 
 	<CheckInput name="run.walking" bind:value={$run.walking}>
@@ -59,7 +58,10 @@
 		<small>(et {parent ? 's' : 'm'}'engage à ne pas courir sur l'ensemble du parcours)</small>
 	</CheckInput>
 	<CheckInput name="run.copyright" bind:value={$run.copyright} required>
-		<p style="margin: 0;">{parent ? 'Il ' : "J'"}accepte le <a href="/assets/reglement.pdf" target="_blank">réglement de la course A Ton Allure</a></p>
+		<p style="margin: 0;">
+			{parent ? 'Il ' : "J'"}accepte le
+			<a href="/assets/reglement.pdf" target="_blank">réglement de la course A Ton Allure</a>
+		</p>
 	</CheckInput>
 
 	{#if $needs.certificate}

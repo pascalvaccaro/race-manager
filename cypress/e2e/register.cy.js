@@ -71,9 +71,11 @@ describe("Un participant souhaite s'inscrire à la prochaine course A Ton Allure
 				.type('r.mahel@yahoo.fr')
 				.blur()
 				.get('input[name="runner.firstname"]')
-				.should('have.value', 'Réhane')
+				.should('not.be.visible')
 				.get('input[name="runner.lastname"]')
-				.should('have.value', 'Mahel')
+				.should('not.be.visible')
+				.get('select[name="runnerId"]')
+				.contains('Réhane Mahel')
 				.get('input[name="files.certificate')
 				.selectFile('cypress/e2e/assets/certificat_medical.pdf')
 				.get('input[name="files.authorization')
@@ -86,7 +88,7 @@ describe("Un participant souhaite s'inscrire à la prochaine course A Ton Allure
 				.contains('Ton inscription est confirmée pour la course du');
 		});
 
-		it('en tant que "parent" marcheur d\'autres coureurs', () => {
+		it.skip('en tant que "parent" marcheur d\'autres coureurs', () => {
 			cy.get('input[name="runner.email"]')
 				.clear()
 				.type('marie.revelle@gmail.com')
