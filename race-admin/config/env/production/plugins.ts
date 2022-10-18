@@ -1,4 +1,12 @@
 export default ({ env }) => ({
+  config: {
+    importOnBootstrap: false,
+    customTypes: [],
+    excludedConfig: [
+      "core-store.plugin_strapi-stripe_stripeSetting",
+      "core-store.plugin_users-permissions_grant",
+    ],
+  },
   upload: {
     config: {
       provider: "cloudinary",

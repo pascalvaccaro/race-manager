@@ -65,7 +65,8 @@
           "startDate",
           "park",
           "runs",
-          "startTime"
+          "startTime",
+          "gallery"
         ]
       },
       "conditions": []
@@ -90,7 +91,8 @@
           "startDate",
           "park",
           "runs",
-          "startTime"
+          "startTime",
+          "gallery"
         ]
       },
       "conditions": []
@@ -103,7 +105,8 @@
           "startDate",
           "park",
           "runs",
-          "startTime"
+          "startTime",
+          "gallery"
         ]
       },
       "conditions": []
@@ -226,6 +229,12 @@
           "attachments"
         ]
       },
+      "conditions": []
+    },
+    {
+      "action": "admin::api-tokens.access",
+      "subject": null,
+      "properties": {},
       "conditions": []
     },
     {
@@ -242,6 +251,12 @@
     },
     {
       "action": "admin::api-tokens.read",
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "admin::api-tokens.regenerate",
       "subject": null,
       "properties": {},
       "conditions": []

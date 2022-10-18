@@ -203,6 +203,20 @@
           "sortable": false
         }
       },
+      "isFreeAmount": {
+        "edit": {
+          "label": "isFreeAmount",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "isFreeAmount",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -238,9 +252,6 @@
         "title",
         "slug",
         "description"
-      ],
-      "editRelations": [
-        "stripePayment"
       ],
       "edit": [
         [
@@ -302,7 +313,16 @@
             "name": "stripePlanId",
             "size": 6
           }
+        ],
+        [
+          {
+            "name": "isFreeAmount",
+            "size": 4
+          }
         ]
+      ],
+      "editRelations": [
+        "stripePayment"
       ]
     }
   },

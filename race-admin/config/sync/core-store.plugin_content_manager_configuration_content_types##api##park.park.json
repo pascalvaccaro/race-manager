@@ -111,7 +111,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "id"
+          "mainField": "startDate"
         },
         "list": {
           "label": "races",
