@@ -1,23 +1,29 @@
 previewsEnabled: true
 services:
-  - type: web
-    name: race-website
+  - name: race-website
+    type: web
     env: node
     region: frankfurt
     rootDir: race-website
     buildCommand: npm install && npm run build
+    buildFilter:
+      paths:
+        - race-website/src/**/*
+        - race-website/static/**/*
     startCommand: node build/index.js
     autoDeploy: false
     envVars:
       - key: NODE_VERSION
         value: ~16.13.0
+      - key: STRAPI_API_TOKEN
+        sync: false
       - key: STRAPI_URL
         fromService:
           name: race-admin
           type: web
-          property: hostport
-  - type: web
-    name: race-admin
+          envVarKey: RENDER_EXTERNAL_URL
+  - name: race-admin
+    type: web
     env: node
     rootDir: race-admin
     plan: starter
@@ -28,7 +34,8 @@ services:
     autoDeploy: false
     buildFilter:
       paths:
-      - race-admin/**/*
+      - race-admin/config/**/*
+      - race-admin/src/**/*
     envVars:
       - key: NODE_VERSION
         value: ~16.13.0
