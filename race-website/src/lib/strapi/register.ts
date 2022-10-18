@@ -1,19 +1,20 @@
 import FormData from 'form-data';
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
+import { PUBLIC_STRAPI_URL } from '$env/static/public';
 import { fetchFactory, parseStrapiData } from './shared';
 
-const { STRAPI_URL, STRAPI_API_TOKEN } = env;
+const { STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
 
 export const getRunner = async (id: string | number, query: Record<string, any> = { populate: ['attachments'] }) => {
-	const endpoint = new URL('/api/runners/' + id, STRAPI_URL);
+	const endpoint = new URL('/api/runners/' + id, PUBLIC_STRAPI_URL);
 	endpoint.search = stringify(query);
 	return authFetch<App.Runner>(endpoint);
 };
 
 export const getRun = async (id: string | number) => {
-	const endpoint = new URL('/api/runs/' + id, STRAPI_URL);
+	const endpoint = new URL('/api/runs/' + id, PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['race', 'race.park', 'runner']
 	});
@@ -21,7 +22,7 @@ export const getRun = async (id: string | number) => {
 };
 
 export const findRunnerByEmail = async (email: string) => {
-	const endpoint = new URL('/api/runners', STRAPI_URL);
+	const endpoint = new URL('/api/runners', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		filters: { email },
 		populate: ['attachments']
@@ -30,7 +31,7 @@ export const findRunnerByEmail = async (email: string) => {
 };
 
 export const findRunners = async (query: Record<string, string | undefined>) => {
-	const endpoint = new URL('/api/runners', STRAPI_URL);
+	const endpoint = new URL('/api/runners', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		filters: {
 			$and: Object.entries(query)
@@ -43,7 +44,7 @@ export const findRunners = async (query: Record<string, string | undefined>) => 
 };
 
 export const registerRun = async (run: App.Run) => {
-	const endpoint = new URL('/api/runs', STRAPI_URL);
+	const endpoint = new URL('/api/runs', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['race', 'race.park', 'runner']
 	});
@@ -62,7 +63,7 @@ export const createOrUpdateRunner = async (
 	attachments: Attachment[] = []
 ) => {
 	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
-	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
+	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['attachments', 'parent']
 	});

@@ -1,21 +1,22 @@
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
+import { PUBLIC_STRAPI_URL } from '$env/static/public';
 import { fetchFactory } from './shared';
 import { getSimpleDate } from '$lib/utils/date';
 
-const { STRAPI_URL, STRAPI_API_TOKEN } = env;
+const { STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
 
 export const getRace = async (id: string) => {
 	if (id === 'next') return findNextPublicRace();
-	const endpoint = new URL('/api/races/' + id, STRAPI_URL);
+	const endpoint = new URL('/api/races/' + id, PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['runs', 'runs.runner', 'park']
 	});
 	return authFetch<App.Race>(endpoint);
 };
 export const findNextPublicRace = async () => {
-	const endpoint = new URL('/api/races', STRAPI_URL);
+	const endpoint = new URL('/api/races', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		filters: { startDate: { $gte: getSimpleDate() } },
 		sort: 'startDate:asc',
@@ -25,7 +26,7 @@ export const findNextPublicRace = async () => {
 	return authFetch<App.Race[]>(endpoint).then(([first]) => first ?? null);
 };
 export const getPastRaces = async () => {
-	const endpoint = new URL('/api/races', STRAPI_URL);
+	const endpoint = new URL('/api/races', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		filters: { startDate: { $lt: getSimpleDate() }},
 		populate: ['runs', 'runs.runner', 'park', 'gallery']
@@ -35,7 +36,7 @@ export const getPastRaces = async () => {
 
 
 export const createRun = (race: string | number) => async (run: Partial<App.Run>) => {
-	const endpoint = new URL('/api/runs', STRAPI_URL);
+	const endpoint = new URL('/api/runs', PUBLIC_STRAPI_URL);
 	const options = {
 		method: 'POST',
 		body: JSON.stringify({ data: { ...run, race } })
@@ -44,7 +45,7 @@ export const createRun = (race: string | number) => async (run: Partial<App.Run>
 };
 
 export const updateRun = (race: string | number) => async (run: App.Run) => {
-	const endpoint = new URL('/api/runs/' + run.id, STRAPI_URL);
+	const endpoint = new URL('/api/runs/' + run.id, PUBLIC_STRAPI_URL);
 	const options = {
 		method: 'PUT',
 		body: JSON.stringify({ data: { ...run, race } })
@@ -53,7 +54,7 @@ export const updateRun = (race: string | number) => async (run: App.Run) => {
 };
 
 export const findRuns = async (race: string | number) => {
-	const endpoint = new URL('/api/runs', STRAPI_URL);
+	const endpoint = new URL('/api/runs', PUBLIC_STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['race'],
 		filters: { race }

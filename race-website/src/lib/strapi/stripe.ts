@@ -1,7 +1,8 @@
 import { env } from '$env/dynamic/private';
+import { PUBLIC_STRAPI_URL } from "$env/static/public";
 import { fetchFactory } from './shared';
-const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 
+const { STRAPI_API_TOKEN } = env;
 export type StripeProduct = {
 	id: string;
 	title: string;
@@ -26,7 +27,7 @@ export type StripeTrx = {
 const authFetch = fetchFactory(STRAPI_API_TOKEN, (res: Response) => res.json());
 
 export async function checkOutProduct(product: StripeProduct, redirections: Record<string, string>) {
-	const endpoint = new URL('/strapi-stripe/createCheckoutSession/', STRAPI_URL);
+	const endpoint = new URL('/strapi-stripe/createCheckoutSession/', PUBLIC_STRAPI_URL);
 
 	const response = await authFetch<StripeSession>(endpoint, {
 		method: 'post',
@@ -49,12 +50,12 @@ export async function getPaymentDetail(checkoutSessionId: string) {
 	if (!checkoutSessionId) return null;
 	const endpoint = new URL(
 		'/strapi-stripe/retrieveCheckoutSession/' + checkoutSessionId,
-		STRAPI_URL
+		PUBLIC_STRAPI_URL
 	);
 	const transaction = await authFetch<StripeTrx>(endpoint);
 
 	if (transaction.payment_status === 'paid') {
-		const endpoint = new URL('/strapi-stripe/stripePayment', STRAPI_URL);
+		const endpoint = new URL('/strapi-stripe/stripePayment', PUBLIC_STRAPI_URL);
 		await authFetch(endpoint, {
 			method: 'post',
 			body: JSON.stringify({
