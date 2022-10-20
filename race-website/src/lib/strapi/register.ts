@@ -1,11 +1,10 @@
 import FormData from 'form-data';
 import { stringify } from 'qs';
-import { env } from '$env/dynamic/private';
 import { PUBLIC_STRAPI_URL } from '$env/static/public';
+import { STRAPI_WEBSITE_TOKEN } from '$env/static/private';
 import { fetchFactory, parseStrapiData } from './shared';
 
-const { STRAPI_API_TOKEN } = env;
-const authFetch = fetchFactory(STRAPI_API_TOKEN);
+const authFetch = fetchFactory(STRAPI_WEBSITE_TOKEN);
 
 export const getRunner = async (id: string | number, query: Record<string, any> = { populate: ['attachments'] }) => {
 	const endpoint = new URL('/api/runners/' + id, PUBLIC_STRAPI_URL);
@@ -86,7 +85,7 @@ export const createOrUpdateRunner = async (
 		hostname: endpoint.hostname,
 		port: endpoint.port,
 		path: endpoint.pathname + endpoint.search,
-		headers: { Authorization: `bearer ${STRAPI_API_TOKEN}` }
+		headers: { Authorization: `bearer ${STRAPI_WEBSITE_TOKEN}` }
 	};
 
 	return new Promise<App.Runner>((resolve, reject) =>

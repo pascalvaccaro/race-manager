@@ -6,9 +6,9 @@
   "scripts": {
     "build": "pm2 start build.config.js --attach",
     "predev": "pm2 stop e2e.config.js",
-    "dev": "pm2 start dev.config.js",
+    "dev": "pm2 start dev.config.js --attach",
     "pretest": "pm2 stop dev.config.js && rm -f ./race-admin/.tmp/cypress.db",
-    "test": "pm2 start e2e.config.js --attach",
+    "test": "pm2 start e2e.config.js",
     "e2e:open": "cypress open",
     "e2e:run": "cy2 run --record --key myKey --parallel --ci-build-id `date +%s`"
   },

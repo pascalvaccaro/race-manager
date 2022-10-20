@@ -1,7 +1,6 @@
-import fetch from "node-fetch";
-import { fillDatabaseWithNextRace } from "./seed";
+import { fillDatabaseWithNextRace, createWebsiteToken } from "./seed";
 
-const { NODE_ENV } = process.env;
+const { NODE_ENV, IS_PULL_REQUEST, STRAPI_WEBSITE_TOKEN } = process.env;
 
 export default {
   /**
@@ -20,12 +19,19 @@ export default {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
-    if (NODE_ENV === "test" || NODE_ENV === "staging") {
-      await fillDatabaseWithNextRace(strapi).catch(err => {
-        strapi.log.error(err.message);
-        // Inside PM2
-        if (typeof process.send === "function") process.exit(3);
-      });
+    try {
+      if (STRAPI_WEBSITE_TOKEN) {
+        const accessKey = strapi.service("admin::api-token").hash(STRAPI_WEBSITE_TOKEN);
+        await createWebsiteToken(strapi, accessKey);
+      }
+      if (NODE_ENV === "test" || IS_PULL_REQUEST === "true") {
+        await fillDatabaseWithNextRace(strapi);
+      }
+    } catch (err) {
+      strapi.log.error(err.message);
+      // Inside PM2
+      if (typeof process.send === "function") process.exit(3);
+      
     }
   },
 };

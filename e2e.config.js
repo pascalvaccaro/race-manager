@@ -14,16 +14,13 @@ module.exports = {
     cwd: "./race-website",
     interpreter: "/usr/bin/bash",
     script: "pnpm",
-    args: "run preview --mode test",
+    args: "run preview",
     restart_delay: 2500,
-    env: {
-      NODE_ENV: 'production'
-    }
   }, {
     name: "cypress",
     script: 'npm',
-    autorestart: false,
     args: "run e2e:open",
+    autorestart: false,
     env: {
       FRONTEND_URL: 'http://localhost:4173'
     }

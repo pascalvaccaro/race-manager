@@ -13,11 +13,10 @@ services:
     startCommand: node build/index.js
     autoDeploy: false
     envVars:
+      - fromGroup: strapi-auth
       - key: NODE_VERSION
         value: ~16.13.0
-      - key: STRAPI_API_TOKEN
-        sync: false
-      - key: STRAPI_URL
+      - key: PUBLIC_STRAPI_URL
         fromService:
           name: race-admin
           type: web
@@ -37,6 +36,7 @@ services:
       - race-admin/config/**/*
       - race-admin/src/**/*
     envVars:
+      - fromGroup: strapi-auth
       - key: NODE_VERSION
         value: ~16.13.0
       - key: NODE_ENV
@@ -64,3 +64,9 @@ databases:
   - name: strapi
     plan: starter
     region: frankfurt
+
+envVarGroups:
+- name: strapi-auth
+  envVars:
+    - key: STRAPI_WEBSITE_TOKEN
+      generateValue: true

@@ -1,8 +1,7 @@
-import { env } from '$env/dynamic/private';
 import { PUBLIC_STRAPI_URL } from "$env/static/public";
+import { STRAPI_WEBSITE_TOKEN } from '$env/static/private';
 import { fetchFactory } from './shared';
 
-const { STRAPI_API_TOKEN } = env;
 export type StripeProduct = {
 	id: string;
 	title: string;
@@ -24,7 +23,7 @@ export type StripeTrx = {
 	};
 };
 
-const authFetch = fetchFactory(STRAPI_API_TOKEN, (res: Response) => res.json());
+const authFetch = fetchFactory(STRAPI_WEBSITE_TOKEN, (res: Response) => res.json());
 
 export async function checkOutProduct(product: StripeProduct, redirections: Record<string, string>) {
 	const endpoint = new URL('/strapi-stripe/createCheckoutSession/', PUBLIC_STRAPI_URL);

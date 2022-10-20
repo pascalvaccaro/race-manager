@@ -1,11 +1,10 @@
 import { stringify } from 'qs';
-import { env } from '$env/dynamic/private';
+import { STRAPI_WEBSITE_TOKEN } from '$env/static/private';
 import { PUBLIC_STRAPI_URL } from '$env/static/public';
 import { fetchFactory } from './shared';
 import { getSimpleDate } from '$lib/utils/date';
 
-const { STRAPI_API_TOKEN } = env;
-const authFetch = fetchFactory(STRAPI_API_TOKEN);
+const authFetch = fetchFactory(STRAPI_WEBSITE_TOKEN);
 
 export const getRace = async (id: string) => {
 	if (id === 'next') return findNextPublicRace();

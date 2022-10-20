@@ -1,3 +1,28 @@
+export async function createWebsiteToken(strapi: Strapi.Strapi, accessKey: string) {
+  const name = "Website API Token";
+  const data = {
+    name,
+    description: "API Token for the frontend website",
+    type: "full-access",
+    lifespan: null,
+    accessKey,
+  };
+  const engine = strapi.query("admin::api-token");
+  let apiToken = await engine.findOne({
+    select: ["id", "name", "accessKey"],
+    where: { name },
+  });
+  if (!apiToken) {
+    apiToken = await engine.create({ data });
+  } else if (apiToken.accessKey !== accessKey) {
+    apiToken = await engine.update({
+      where: { id: apiToken.id },
+      data: { accessKey },
+    });
+  }
+  strapi.log.info(`Created/Updated token ${name} / match: ${apiToken.accessKey === accessKey}`);
+}
+
 async function createManyAndReturn<T = unknown>(apiId: string, entries: T[]) {
   const results = await Promise.all(
     entries.map((data) => strapi.entityService.create(apiId, { data }))
