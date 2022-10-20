@@ -1,6 +1,6 @@
 import http from 'node:http';
 
-const { STRAPI_API_TOKEN = '', STRAPI_URL = 'http://localhost:1337' } = process.env;
+const { STRAPI_WEBSITE_TOKEN = '', STRAPI_URL = 'http://localhost:1337' } = process.env;
 
 function fetch(
 	endpoint,
@@ -36,7 +36,7 @@ async function createManyAndReturn(path, entries) {
 	const options = {
 		method: 'POST',
 		headers: {
-			Authorization: `bearer ${STRAPI_API_TOKEN}`,
+			Authorization: `bearer ${STRAPI_WEBSITE_TOKEN}`,
 			'Content-Type': 'application/json'
 		}
 	};
