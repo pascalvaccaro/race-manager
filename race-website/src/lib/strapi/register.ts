@@ -38,7 +38,7 @@ export const findRunners = async (query: Record<string, string | undefined>) => 
 				.filter(([, v]) => !!v)
 				.map(([key, $eqi]) => ({ [key]: { $eqi } }))
 		},
-		populate: ['attachments']
+		populate: ['attachments', 'children']
 	});
 	return authFetch<App.Runner[]>(endpoint);
 };
