@@ -118,6 +118,6 @@ export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
   strapi.log.info(
     `DONE SEEDING:\n\t${parks.length} parks\n\t${races.length} races\n\t${
       parents.length + children.length
-    } runners\n\t${runs.length} runs`
+    } runners\n\t${runs.length} runs `
   );
 }
