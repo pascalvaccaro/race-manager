@@ -23,6 +23,9 @@ module.exports = {
     name: "cypress",
     script: 'npm',
     autorestart: false,
-    args: "run e2e:open"
+    args: "run e2e:open",
+    env: {
+      FRONTEND_URL: 'http://localhost:4173'
+    }
   }]
 }
