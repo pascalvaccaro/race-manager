@@ -22,13 +22,5 @@ export default [
     config: {
       auth: false,
     },
-  },
-  {
-    method: 'GET',
-    path: '/website/token',
-    handler: 'website.getApiToken',
-    config: {
-      auth: false,
-    }
   }
 ];
