@@ -1,4 +1,7 @@
-export async function createWebsiteToken(strapi: Strapi.Strapi, accessKey: string) {
+export async function createWebsiteToken(
+  strapi: Strapi.Strapi,
+  accessKey: string
+) {
   const name = "Website API Token";
   const data = {
     name,
@@ -20,50 +23,91 @@ export async function createWebsiteToken(strapi: Strapi.Strapi, accessKey: strin
       data: { accessKey },
     });
   }
-  strapi.log.info(`Created/Updated token ${name} / match: ${apiToken.accessKey === accessKey}`);
+  strapi.log.info(
+    `Created/Updated token ${name} / match: ${apiToken.accessKey === accessKey}`
+  );
 }
 
-async function createManyAndReturn<T = unknown>(apiId: string, entries: T[]) {
+async function checkForRunners<
+  T extends Record<string, unknown> = {
+    firstname: string;
+    lastname: string;
+    email?: string;
+    minor?: boolean;
+    parent?: number;
+    child?: boolean;
+  }
+>(apiId: string, entries: T[]) {
   const results = await Promise.all(
-    entries.map((data) => strapi.entityService.create(apiId, { data }))
+    entries.map(async (data) => {
+      const [entry] = await strapi.entityService.findMany(apiId, {
+        filters: { email: data.email },
+      });
+      return entry || (await strapi.entityService.create(apiId, { data }));
+    })
   );
   return results as Array<T & { id: number; createdAt: Date; updatedAt: Date }>;
 }
 
-export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
+async function checkForPark(data: Record<string, unknown>) {
+  const { name } = data;
+  const [park] = await strapi.entityService.findMany("api::park.park", {
+    filters: { name: { $eqi: name } },
+  });
+  return (
+    park || (await strapi.entityService.create("api::park.park", { data }))
+  );
+}
+
+async function checkForNextRace(data: Record<string, unknown>) {
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth();
   const year = today.getFullYear();
-  strapi.log.info("Start seeding on " + today.toDateString());
+  const date = `${year}-${month + 1}-${day}`;
 
-  const parks = await createManyAndReturn("api::park.park", [
-    {
-      distance: 5,
-      name: "Pastré",
-      laps: 2,
+  const [race] = await strapi.entityService.findMany("api::race.race", {
+    filters: { startDate: { $gte: date } },
+  });
+  if (race?.publishedAt) return race;
+  if (race)
+    return await strapi.entityService.update("api::race.race", race.id, {
+      data: { publishedAt: new Date(year, month - 1, day, 10) },
+    });
+  return await strapi.entityService.create("api::race.race", {
+    data: {
+      ...data,
+      startDate: new Date(year, month, Math.min(28, day + 1), 10)
+        .toISOString()
+        .split("T")[0],
+      publishedAt: new Date(year, month - 1, day, 10),
     },
-    {
-      distance: 5,
-      name: "Borély",
-      laps: 3.5,
-    },
-  ]);
+  });
+}
 
-  const races = await createManyAndReturn(
-    "api::race.race",
-    Array(4)
-      .fill(null)
-      .map((_, i) => ({
-        startDate: new Date(year, month - i, Math.min(28, day + 1), 10)
-          .toISOString()
-          .split("T")[0],
-        startTime: "10:00:00.000",
-        park: parks.map((p) => p.id)[i % 2],
-        publishedAt: new Date(year, month - i - 1, 5, 10),
-      }))
+export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
+  strapi.log.info("Starting seed");
+
+  const parks = await Promise.all(
+    [
+      {
+        distance: 5,
+        name: "Pastré",
+        laps: 2,
+      },
+      {
+        distance: 5,
+        name: "Borély",
+        laps: 3.5,
+      },
+    ].map(checkForPark)
   );
-  const [nextRace] = races.filter((r) => new Date(r.startDate) > today);
+
+  const nextRace = await checkForNextRace({
+    startTime: "10:00:00.000",
+    park: parks.map((p) => p.id)[Math.floor(Math.random() * 2)],
+  });
+
   if (!nextRace) {
     strapi.log.error(
       "Something went wrong as there is no next race to register to..."
@@ -71,7 +115,7 @@ export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
     process.exit(1);
   }
 
-  const parents = await createManyAndReturn("api::runner.runner", [
+  const parents = await checkForRunners("api::runner.runner", [
     {
       firstname: "Pascal",
       lastname: "Vaccaro",
@@ -94,7 +138,7 @@ export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
     const parent = parents.find((p) => p.email === email);
     return parent?.id ?? null;
   };
-  const children = await createManyAndReturn("api::runner.runner", [
+  await checkForRunners("api::runner.runner", [
     {
       firstname: "Clarisse",
       lastname: "Roblin",
@@ -107,17 +151,13 @@ export async function fillDatabaseWithNextRace(strapi: Strapi.Strapi) {
       child: true,
     },
   ]);
-  const runs = await createManyAndReturn("api::run.run", [
-    {
+  await strapi.entityService.create("api::run.run", {
+    data: {
       walking: true,
       runner: attachParent("pascal.vaccaro@gmail.com"),
       race: nextRace.id,
     },
-  ]);
+  });
 
-  strapi.log.info(
-    `DONE SEEDING:\n\t${parks.length} parks\n\t${races.length} races\n\t${
-      parents.length + children.length
-    } runners\n\t${runs.length} runs `
-  );
+  strapi.log.info("Finished seed");
 }
