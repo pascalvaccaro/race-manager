@@ -1,8 +1,6 @@
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:4173';
-
 describe("Un participant souhaite s'inscrire à la prochaine course A Ton Allure", () => {
 	beforeEach(() => {
-		cy.visit(FRONTEND_URL, { failOnStatusCode: false });
+		cy.visit("/", { failOnStatusCode: false });
 	});
 
 	it("La page d'inscription à la prochaine course s'affiche", () => {

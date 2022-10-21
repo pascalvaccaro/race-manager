@@ -1,8 +1,6 @@
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:4173';
-
-describe('Un participant souhaite inscrire une autre personne ensuite', () => {
+describe('Un participant souhaite inscrire une autre personne', () => {
   beforeEach(() => {
-		cy.visit(FRONTEND_URL, { failOnStatusCode: false });
+		cy.visit("/race/next");
 	});
 
   it('qui est un petit marcheur de moins de 16 ans ', () => {

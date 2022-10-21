@@ -47,4 +47,4 @@ jobs:
         run: npx cy2 run --record --key myKey --parallel --ci-build-id ${{ github.run_id }}-${{ github.run_attempt }}
         env:
           CYPRESS_API_URL: https://director-x2il.onrender.com
-          FRONTEND_URL: ${{ needs.check.outputs.env_url }}
+          CYPRESS_BASE_URL: ${{ needs.check.outputs.env_url }}
