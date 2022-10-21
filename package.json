@@ -10,7 +10,7 @@
     "pretest": "pm2 stop dev.config.js && rm -f ./race-admin/.tmp/cypress.db",
     "test": "pm2 start e2e.config.js",
     "e2e:open": "cypress open",
-    "e2e:run": "cy2 run --record --key myKey --parallel --ci-build-id `date +%s`"
+    "e2e:run": "cypress run"
   },
   "repository": {
     "type": "git",

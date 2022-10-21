@@ -1,8 +1,6 @@
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:4173';
-
 describe("Un participant souhaite s'inscrire à la prochaine course A Ton Allure", () => {
 	beforeEach(() => {
-		cy.visit(FRONTEND_URL, { failOnStatusCode: false });
+		cy.visit("/", { failOnStatusCode: false });
 	});
 
 	it("La page d'inscription à la prochaine course s'affiche", () => {
@@ -104,48 +102,6 @@ describe("Un participant souhaite s'inscrire à la prochaine course A Ton Allure
 				.contains('Merci Marie')
 				.get('p')
 				.contains('Ton inscription est confirmée pour la course du');
-		});
-	});
-
-	describe('Et souhaite inscrire une autre personne ensuite', () => {
-		it('qui est un petit marcheur de moins de 16 ans ', () => {
-			cy.get('input[name="runner.email"]')
-				.clear()
-				.type('pablo.lenouveau@yahoo.fr')
-				.get('input[name="files.certificate')
-				.selectFile('cypress/e2e/assets/certificat_medical.pdf')
-				.get('form')
-				.submit()
-				.get('h2')
-				.contains('Merci Paulo')
-				.get('[data-cy="Je souhaite inscrire d\'autres personnes..."]')
-				.click()
-				.get('[data-cy="En l\'inscrivant moi-même..."]')
-				.click()
-				.get('form')
-				.get('input[name="runner.firstname"]')
-				.clear()
-				.type('Pepito')
-				.get('input[name="runner.lastname"]')
-				.clear()
-				.type('Lenouveau')
-				.get('input[name="run.walking"]')
-				.click()
-				.get('[data-cy="Il/elle est mineur-e et..."')
-				.click()
-				.get('input[name="runner.child"][value="true"]')
-				.click()
-				.get('p.alert')
-				.should(
-					'have.text',
-					"Les mineur-e-s de moins de 16 ans doivent impérativement être accompagné-e-s d'un adulte pendant toute la course !"
-				)
-				.get('form')
-				.submit()
-				.get('h2')
-				.contains('Merci Pablo')
-				.get('p')
-				.contains("L'inscription de Pepito est confirmée pour la course du");
 		});
 	});
 });

@@ -22,7 +22,7 @@ module.exports = {
     args: "run e2e:open",
     autorestart: false,
     env: {
-      FRONTEND_URL: 'http://localhost:4173'
+      CYPRESS_BASE_URL: 'http://localhost:4173'
     }
   }]
 }

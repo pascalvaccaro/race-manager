@@ -20,4 +20,7 @@
 	pre {
 		color: white;
 	}
+	pre {
+		font-size: 18px;
+	}
 </style>
