@@ -31,11 +31,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: check
-    if: needs.check.outputs.env_status == 'success'
+    if: ${{ needs.check.outputs.env_status == 'success' && startsWith(needs.check.outputs.env_url, 'https://')
     strategy:
       fail-fast: false
       matrix:
-        containers: [1, 2, 3, 4, 5]
+        containers: [1, 2]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run Cypress suite
-        run: npm run e2e:run
+        run: npx cy2 run --record --key myKey --parallel --ci-build-id ${{ github.run_id }}-${{ github.run_attempt }}
         env:
           CYPRESS_API_URL: https://director-x2il.onrender.com
           FRONTEND_URL: ${{ needs.check.outputs.env_url }}
