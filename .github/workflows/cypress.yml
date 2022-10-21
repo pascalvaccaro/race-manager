@@ -1,83 +1,42 @@
-name: Post-deploy
+name: 'Test Preview Environment'
+
 on:
-  push:
-    branches-ignore:
-      - 'master'
-      - 'preview'
-env:
-  RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }} # rnd_Lmr2WSfauYZ6UkwXawrvQjIgo52E
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  RENDER_SERVICE_ID: srv-cd4mfb2rrk02t5ffqqo0
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
+  check:
+    name: 'Get Preview Environment URL'
     runs-on: ubuntu-latest
-    name: 'Get environment URL'
+    timeout-minutes: 30
     outputs:
-      commit_status: ${{ steps.status.outputs.env_status }}
-      env_url: ${{ steps.url.outputs.env_url }}  
+      env_status: ${{ steps.wait.outputs.env_status }}
+      env_url: ${{ steps.wait.outputs.env_url }}  
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps: 
       - uses: actions/checkout@v2
-      - name: 'Await deployment'
+      - uses: actions/check-render-preview@v1
+        id: admin
+        with:
+          SERVICE_NAME: race-admin
+      - uses: actions/check-render-preview@v1
+        if: ${{ steps.admin.outputs.env_status == 'success' }}
         id: wait
-        run: |
-          DEPLOY_STATUS="pending"
-          sleep 10
-          DEPLOYS=$(curl --request GET \
-            --url https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys \
-            --header 'accept: application/json' \
-            --header 'authorization: Bearer $RENDER_TOKEN')
-          LENGTH=echo "$DEPLOYS" | jq -r 'length'
-          DEPLOY_ID="none"
-          echo "$DEPLOYS" | jq '.[]' | while read deploy; do
-            COMMIT_ID=echo "$deploy" | jq '.commit.id'
-            if [[ "$COMMIT_ID" == "$GITHUB_SHA"]]; then
-              DEPLOY_ID=echo "$deploy" | jq '.id'
-            fi
-          done
-
-          if [ $LENGTH == 0 ]; then
-              echo "No deploys found for service $RENDER_SERVICE_ID. Skipping."
-          elif [[ "$DEPLOY_COMMIT" != "none" ]]
-              until [ "$DEPLOY_STATUS" == "live" ] || [ "$DEPLOY_STATUS" == "canceled" ]; do
-                sleep 10
-                DEPLOY_STATUS=$(curl --request GET \
-                  --url https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys/$DEPLOY_ID \
-                  --header 'accept: application/json' \
-                  --header 'authorization: Bearer $RENDER_TOKEN' | jq '.status')
-                if [[ "$DEPLOY_STATUS" == "deactivated"] || ["$DEPLOY_STATUS" == "build_failed"] || ["$DEPLOY_STATUS" == "update_failed"]]; then
-                  break
-                fi
-              done
-              if [[ "$DEPLOY_STATUS" == "live"]] then;
-                echo "Environment deployed. Finished."
-              fi
-          fi
-          echo "::set-output name=env_status::$DEPLOY_STATUS"
-      - name: 'Pass URL'
-        id: url
-        if: steps.wait.outputs.env_status == 'live'
-        run: |
-          ENV_URL=$(curl --request GET \
-                  --url https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys/$DEPLOY_ID \
-                  --header 'accept: application/json' \
-                  --header 'authorization: Bearer $RENDER_TOKEN' | jq '.status')
-          echo "::set-output name=env_url::$ENV_URL"
-  test:
+        with:
+          SERVICE_NAME: race-website
+  e2e:
+    name: 'Run end-to-end test suite with Cypress'
     runs-on: ubuntu-latest
-    name: 'Status tests'
+    timeout-minutes: 15
+    needs: check
+    if: needs.check.outputs.env_status == 'success'
     strategy:
       fail-fast: false
       matrix:
         containers: [1, 2, 3, 4, 5]
-    needs: build
-    if: needs.build.outputs.commit_status == 'success'
     steps:
-      - name: 'Application should deploy successfully'
-        uses: lakuapik/gh-actions-http-status@v1
-        with:
-          sites: '["${{ needs.build.outputs.env_url }}"]'
-          expected: '[200, 308]'
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
@@ -88,4 +47,4 @@ jobs:
         run: npm run e2e:run
         env:
           CYPRESS_API_URL: https://director-x2il.onrender.com
-          FRONTEND_URL: ${{ needs.build.outputs.env_url }}
+          FRONTEND_URL: ${{ needs.check.outputs.env_url }}
